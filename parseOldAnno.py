@@ -8,9 +8,12 @@ def main(inpath, outpath):
     proteome = {}
     count = {}
     clan_dict = {}
-    tools = ['pfam', 'smart', 'tmhmm', 'coils', 'flps', 'signalp', 'seg']
+    tools = ['pfam', 'smart', 'tmhmm', 'coils2', 'flps', 'signalp', 'seg']
     for tool in tools:
-        proteome, count, clan_dict = xmlreader(inpath + '/' + tool + '.xml', tool, proteome, clan_dict, count)
+        if tool == 'coils2':
+            proteome, count, clan_dict = xmlreader(inpath + '/coils.xml', tool, proteome, clan_dict, count)
+        else:
+            proteome, count, clan_dict = xmlreader(inpath + '/' + tool + '.xml', tool, proteome, clan_dict, count)
     for protein in proteome:
         for tool in tools:
             if tool not in proteome[protein]:
@@ -40,6 +43,8 @@ def xmlreader(path, tool, proteome, clan_dict, count):
             # set up of protein IDs, differentiate between proteins from different files
             if not (p_id in proteome):
                 proteome[p_id] = {'length': int(plength), tool: {}}
+            else:
+                proteome[p_id][tool] = {}
             # set up of datastructure to store annotations
 
             for feature in protein:
@@ -48,7 +53,7 @@ def xmlreader(path, tool, proteome, clan_dict, count):
                     feat_eval = 'NA'
 
                     # evalue check: family/ftype based
-                    if 'evalue' in feature.attrib and float(feature.attrib["evalue"]) <= 0.001:
+                    if ('evalue' in feature.attrib and float(feature.attrib["evalue"]) <= 0.001) or 'evalue' not in feature.attrib:
                         if 'evalue' in feature.attrib:
                             feat_eval = float(feature.attrib["evalue"])
                         if 'clan' in feature.attrib and ftype not in clan_dict:
