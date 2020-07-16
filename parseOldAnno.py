@@ -49,14 +49,14 @@ def xmlreader(path, tool, proteome, clan_dict, count):
 
             for feature in protein:
                 if len(feature) > 0:
-                    ftype = tool + "_" + feature.attrib["type"]
+                    ftype = tool + "_" + feature.attrib["type"].replace(' ', '_')
                     feat_eval = 'NA'
 
                     # evalue check: family/ftype based
                     if ('evalue' in feature.attrib and float(feature.attrib["evalue"]) <= 0.001) or 'evalue' not in feature.attrib:
                         if 'evalue' in feature.attrib:
                             feat_eval = float(feature.attrib["evalue"])
-                        if 'clan' in feature.attrib and ftype not in clan_dict:
+                        if 'clan' in feature.attrib and ftype not in clan_dict and not feature.attrib["clan"] == '---':
                             fclan = feature.attrib["clan"]
                             clan_dict[ftype] = fclan
                         proteome[p_id][tool][ftype] = {'instance': [], 'evalue': feat_eval}
