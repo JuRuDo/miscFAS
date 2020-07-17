@@ -81,16 +81,16 @@ def xmlreader(path, tool, proteome, clan_dict, count):
                             else:
                                 # NO instance based evalue information --> no instances can be rejected:
                                 # set inst_count = 1
-                                inst_count = 1
                                 if len(instance.attrib) == 2:
                                     start = int(instance.attrib["start"])
                                     end = int(instance.attrib["end"])
                                     proteome[p_id][tool][ftype]['instance'].append((start, end, 'NA'))
-
+                                    inst_count += 1
                                 else:
                                     if i == 0:
                                         start = int(instance.attrib["start"])
                                         i = 1
+                                        inst_count += 1
                                     else:
                                         end = int(instance.attrib["end"])
                                         proteome[p_id][tool][ftype]['instance'].append((start, end, 'NA'))
