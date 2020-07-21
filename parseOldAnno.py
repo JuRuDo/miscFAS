@@ -51,6 +51,10 @@ def xmlreader(path, tool, proteome, clan_dict, count):
                 if len(feature) > 0:
                     ftype = tool + "_" + feature.attrib["type"].replace(' ', '_')
                     feat_eval = 'NA'
+                    if ftype == 'signalp_SIGNAL':
+                        ftype = 'signalp_SIGNALP'
+                    elif ftype == 'coils2_coiled_coil':
+                        ftype = 'coils_coiled_coil'
 
                     # evalue check: family/ftype based
                     if ('evalue' in feature.attrib and float(feature.attrib["evalue"]) <= 0.001) or 'evalue' not in feature.attrib:
